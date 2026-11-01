@@ -96,6 +96,7 @@ body.locked{overflow:hidden}
 @keyframes pop{0%{transform:scale(.97)}60%{transform:scale(1.02)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.sheet-card .res .big{animation:none}}
 
+.hintTop{margin:0 0 -12px;font-size:12.5px;color:var(--muted)}
 .tap{margin:-10px 0 0;color:var(--muted);font-size:13.5px;text-align:center}
 .phead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .close{all:unset;cursor:pointer;width:32px;height:32px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:14px;color:var(--ink);flex:none}
@@ -150,10 +151,11 @@ footer{color:var(--muted);font-size:12.5px;text-align:center;display:flex;flex-d
 
 <div class="main" dir="rtl">
 <div class="wrap">
+  <p class="hintTop">הקישו על מדד לצפייה בגרף ובהסבר</p>
   <div class="cards" id="cards"></div>
 
   <button class="cta" id="cta"></button>
-  <p class="tap" id="tapHint"><span style="color:#16a34a;font-weight:700">ירוק</span> = טוב ללווים · <span style="color:#dc2626;font-weight:700">אדום</span> = פחות טוב · לחצו על כרטיס לגרף</p>
+  <p class="tap" id="tapHint"><span style="color:#16a34a;font-weight:700">ירוק</span> = טוב ללווים · <span style="color:#dc2626;font-weight:700">אדום</span> = פחות טוב</p>
 
   <section class="panel" id="panel" aria-live="polite" hidden>
     <div class="phead"><div><h3 id="pTitle"></h3><p class="sub" id="pSub"></p><p class="pts" id="pPts" hidden></p></div>
