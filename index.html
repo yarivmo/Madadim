@@ -33,7 +33,7 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:16p
 .pub h2{margin:0;font-family:var(--display);font-size:26px;text-wrap:balance}
 .pub h2{color:var(--ink)} .pub span{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
 .main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
-.wrap{max-width:560px;margin:20px auto 0;display:flex;flex-direction:column;gap:22px}
+.wrap{max-width:560px;margin:12px auto 0;display:flex;flex-direction:column;gap:22px}
 .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media (min-width:600px){.cards{grid-template-columns:repeat(4,1fr)}}
 .card{all:unset;position:relative;cursor:pointer;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:14px 12px 26px;display:flex;flex-direction:column;gap:8px;min-width:0;text-align:right;box-shadow:0 6px 18px rgba(31,41,51,.08);transition:border-color .15s}
@@ -96,7 +96,9 @@ body.locked{overflow:hidden}
 @keyframes pop{0%{transform:scale(.97)}60%{transform:scale(1.02)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.sheet-card .res .big{animation:none}}
 
-.hintTop{margin:0 0 -12px;font-size:12.5px;color:var(--muted)}
+.hintTop{margin:-6px 0 -12px;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+.hintTop p{margin:0}
+.hintTop .g{color:#16a34a} .hintTop .r{color:#dc2626}
 .tap{margin:-10px 0 0;color:var(--muted);font-size:13.5px;text-align:center}
 .phead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .close{all:unset;cursor:pointer;width:32px;height:32px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:14px;color:var(--ink);flex:none}
@@ -151,11 +153,10 @@ footer{color:var(--muted);font-size:12.5px;text-align:center;display:flex;flex-d
 
 <div class="main" dir="rtl">
 <div class="wrap">
-  <p class="hintTop">הקישו על מדד לצפייה בגרף ובהסבר</p>
+  <div class="hintTop"><p>הקישו על מדד לצפייה בגרף ובהסבר</p><p><b class="g">ירוק</b> = טוב ללווים · <b class="r">אדום</b> = פחות טוב</p></div>
   <div class="cards" id="cards"></div>
 
   <button class="cta" id="cta"></button>
-  <p class="tap" id="tapHint"><span style="color:#16a34a;font-weight:700">ירוק</span> = טוב ללווים · <span style="color:#dc2626;font-weight:700">אדום</span> = פחות טוב</p>
 
   <section class="panel" id="panel" aria-live="polite" hidden>
     <div class="phead"><div><h3 id="pTitle"></h3><p class="sub" id="pSub"></p><p class="pts" id="pPts" hidden></p></div>
@@ -248,7 +249,7 @@ function renderCards(){
 }
 
 function renderChart(){
-  $("panel").hidden = !sel; $("tapHint").hidden = !!sel;
+  $("panel").hidden = !sel;
   if(!sel) return;
   const x = INDICES.find(i=>i.id===sel);
   $("pMean").textContent = x.me;
