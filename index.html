@@ -88,7 +88,13 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:16p
 body.locked{overflow:hidden}
 .sheet-card .rule{background:var(--soft);border:0}
 .sheet-card .rule b{color:var(--ink)}
-.sheet-card .res .big{box-shadow:0 1px 2px rgba(31,41,51,.05),0 4px 14px rgba(31,41,51,.05);border:0}
+.sheet-card .res .big{border:1.5px solid var(--line);padding:14px 16px;animation:pop .35s ease-out}
+.sheet-card .res .big.down{background:var(--up-soft);border-color:#9fdcb4}
+.sheet-card .res .big.up{background:var(--down-soft);border-color:#f3b0b0}
+.sheet-card .res .big b{font-size:32px;line-height:1.1}
+.sheet-card .res .big>div span:first-child{font-size:15px;font-weight:700;color:var(--ink)}
+@keyframes pop{0%{transform:scale(.97)}60%{transform:scale(1.02)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.sheet-card .res .big{animation:none}}
 
 .tap{margin:-10px 0 0;color:var(--muted);font-size:13.5px;text-align:center}
 .phead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
