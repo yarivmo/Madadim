@@ -98,6 +98,8 @@ body.locked{overflow:hidden}
 .phead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .close{all:unset;cursor:pointer;width:32px;height:32px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:14px;color:var(--ink);flex:none}
 .close:focus-visible,.calcbtn:focus-visible,.seg button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.pts{margin:4px 0 0;font-size:13.5px;color:var(--ink);font-variant-numeric:tabular-nums}
+.pts span{color:var(--muted);font-size:12.5px}
 .mean{margin:4px 0 0;padding:10px 12px;background:var(--soft);border-radius:12px;font-size:14.5px}
 .calcbtn{all:unset;cursor:pointer;display:block;text-align:center;margin-top:6px;padding:12px;border-radius:12px;background:var(--ink);color:#fff;font-weight:700;font-size:15px}
 .calc{display:flex;flex-direction:column;gap:8px;margin-top:8px}
@@ -152,7 +154,7 @@ footer{color:var(--muted);font-size:12.5px;text-align:center;display:flex;flex-d
   <p class="tap" id="tapHint"><span style="color:#16a34a;font-weight:700">ירוק</span> = טוב ללווים · <span style="color:#dc2626;font-weight:700">אדום</span> = פחות טוב · לחצו על כרטיס לגרף</p>
 
   <section class="panel" id="panel" aria-live="polite" hidden>
-    <div class="phead"><div><h3 id="pTitle"></h3><p class="sub" id="pSub"></p></div>
+    <div class="phead"><div><h3 id="pTitle"></h3><p class="sub" id="pSub"></p><p class="pts" id="pPts" hidden></p></div>
       <button class="close" id="pClose" aria-label="סגירת הגרף">✕</button></div>
     <svg class="chart" id="chart" viewBox="0 0 360 200" role="img"></svg>
     <p class="hint">12 החודשים האחרונים · <span style="color:#16a34a;font-weight:700">ירוק</span> טוב ללווים, <span style="color:#dc2626;font-weight:700">אדום</span> פחות טוב</p>
@@ -202,10 +204,10 @@ const INDICES = [
   {id:"housing", label:"מדד", name:"מחירי הדירות", title:"מדד מחירי הדירות", sub:"שינוי חודשי באחוזים",
    what:"כמה השתנו מחירי הדירות שנמכרו בישראל.", me:"עלייה אומרת שדירות מתייקרות, וירידה שהן מוזלות. למי שמחפש דירה ירידה טובה. למי שיש לו כבר דירה זה רק משנה את שוויה, לא את ההחזר החודשי.",
    hist:[0.4,0.6,0.5,0.3,0.7,0.4,0.2,0.5,0.3,0.1,0.4,0.2,0.0,0.3,-0.1,0.2,-0.2,0.1,-0.3,0.0,-0.4,-0.2,-0.5,-0.6]},
-  {id:"cpi", label:"מדד", name:"המחירים לצרכן", title:"מדד המחירים לצרכן", sub:"שינוי חודשי באחוזים", annual:1.6,
+  {id:"cpi", label:"מדד", name:"המחירים לצרכן", title:"מדד המחירים לצרכן", sub:"שינוי חודשי באחוזים", annual:1.6, points:105.3, base:"ממוצע 2024",
    what:"כמה התייקרו מוצרים ושירותים יומיומיים. זה המדד שקובע את האינפלציה.", me:"אם יש לכם מסלול צמוד מדד, החוב גדל כשהמדד עולה ויורד כשהוא יורד. עלייה של 1% על 500 אלף ש״ח צמודים מוסיפה כ־5,000 ש״ח לחוב.",
    hist:[0.4,-0.1,0.2,0.3,0.5,0.4,0.2,0.3,0.6,0.1,-0.3,0.1,0.2,-0.2,0.3,0.4,0.2,0.1,0.3,0.4,0.5,0.2,0.1,-0.5]},
-  {id:"build", label:"מדד", name:"תשומות הבנייה", title:"מדד תשומות הבנייה", sub:"שינוי חודשי באחוזים",
+  {id:"build", label:"מדד", name:"תשומות הבנייה", title:"מדד תשומות הבנייה", sub:"שינוי חודשי באחוזים", points:104.0, base:"יולי 2025",
    what:"כמה עולה לבנות דירה: חומרים, עבודה וציוד.", me:"משפיע בעיקר על מי שקנה דירה מקבלן. התשלומים לקבלן צמודים למדד הזה, ועלייה שלו מייקרת אותם.",
    hist:[0.3,0.2,0.4,0.1,0.5,0.3,0.2,0.4,0.2,0.1,0.3,0.0,0.2,0.1,0.3,0.2,0.0,0.1,0.2,-0.1,0.1,0.2,0.0,0.1]},
   {id:"rate", label:"ריבית", name:"בנק ישראל", title:"ריבית בנק ישראל", sub:"רמת הריבית · החלטה אחרונה 21.10.26 · פריים 4.75%", level:true, change:0,
@@ -248,6 +250,8 @@ function renderChart(){
   $("pMean").textContent = x.me;
   $("pTitle").textContent = x.title;
   $("pSub").textContent = x.sub + (x.annual!=null?` · אינפלציה שנתית ${x.annual}%`:"");
+  $("pPts").hidden = x.points==null;
+  if(x.points!=null) $("pPts").innerHTML = `ערך המדד: <b>${x.points.toFixed(1)} נק׳</b> <span>· בסיס: <bdi>${x.base}</bdi></span>`;
   const W=360,H=200,L=34,R=8,T=16,B=26, vals=x.hist.slice(-12), mo=months.slice(-12), n=vals.length, bw=(W-L-R)/n, xr=i=>L+i*bw;
   let hi,lo,ticks;
   if(x.level){lo=3;hi=5;ticks=[5,4.5,4,3.5,3];}
