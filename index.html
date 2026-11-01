@@ -87,7 +87,11 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:16p
   padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));box-shadow:0 -10px 30px rgba(15,23,32,.2);animation:up .22s ease-out}
 @keyframes up{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}
 @media (min-width:600px){.sheet{align-items:center}.sheet-card{border-radius:20px}}
-body.locked{overflow:hidden}
+html.locked,body.locked{overflow:hidden;overscroll-behavior:none}
+body.locked{position:fixed;left:0;right:0;width:100%}
+.sheet{overscroll-behavior:contain;touch-action:none}
+.sheet-card{overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+.backdrop{touch-action:none}
 .sheet-card .rule{background:var(--soft);border:0}
 .sheet-card .rule b{color:var(--ink)}
 .sheet-card .res .big{border:1.5px solid var(--line);padding:14px 16px;animation:pop .35s ease-out}
@@ -313,15 +317,16 @@ $("cAmt").addEventListener("blur",()=>{const v=num($("cAmt").value);if(v)$("cAmt
 document.querySelectorAll("#cDelta button").forEach(b=>b.onclick=()=>{delta=+b.dataset.d;document.querySelectorAll("#cDelta button").forEach(x=>x.setAttribute("aria-checked",x===b));calc();});
 
 /* rate CTA: label follows the latest decision */
+let lockY=0;
 function openCalc(){
   const R=INDICES.find(i=>i.id==="rate"), d=R.change||-0.25;
   const btn=[...document.querySelectorAll("#cDelta button")].find(b=>+b.dataset.d===d);
   if(btn) btn.click();
   calc();
-  $("sheet").hidden=false; document.body.classList.add("locked");
+  lockY=window.scrollY; document.body.style.top=(-lockY)+"px"; document.documentElement.classList.add("locked"); document.body.classList.add("locked"); $("sheet").hidden=false;
   setTimeout(()=>$("cAmt").focus({preventScroll:true}),50);
 }
-function closeCalc(){ $("sheet").hidden=true; document.body.classList.remove("locked"); $("cta").focus(); }
+function closeCalc(){ $("sheet").hidden=true; document.documentElement.classList.remove("locked"); document.body.classList.remove("locked"); document.body.style.top=""; window.scrollTo(0,lockY); $("cta").focus({preventScroll:true}); }
 $("sheetClose").onclick=closeCalc; $("sheetBg").onclick=closeCalc;
 document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("sheet").hidden) closeCalc(); });
 (function(){const R=INDICES.find(i=>i.id==="rate"),c=R.change;
