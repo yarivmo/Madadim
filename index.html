@@ -68,6 +68,8 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:16p
 .insights ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .insights li{display:flex;gap:12px;background:var(--surface);border-radius:16px;padding:14px;box-shadow:0 1px 2px rgba(31,41,51,.05),0 4px 14px rgba(31,41,51,.05)}
 .insights .ic{flex:none;width:32px;height:32px;border-radius:10px;color:var(--ink);background:var(--soft);display:grid;place-items:center;font-size:13px}
+.insights li>div{flex:1;min-width:0;text-align:right}
+.insights .ic{order:2;align-self:flex-start}
 .insights .ic.up{color:var(--up);background:var(--up-soft)} .insights .ic.down{color:var(--down);background:var(--down-soft)} .insights .ic.flat{color:var(--calc);background:var(--calc-tint)}
 
 .insights b{display:block;margin-bottom:2px}
